@@ -1,46 +1,73 @@
-# Getting Started with Create React App
+# React Advenced
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- 스파르타코딩
+- 그 외 기록
 
-## Available Scripts
+### - Re-rendering의 발생 조건
 
-In the project directory, you can run:
+1. 컴포넌트에서 state가 바뀌었을 때
+2. 컴포넌트가 내려받은 Props가 변경되었을 때
+3. 부모 컴포넌트가 리-렌더링 된 경우 자식 컴포넌트는 모두..
 
-### `yarn start`
+### - 최적화 설명
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. memo(React.memo) : 컴포넌트를 캐싱
+2. useMemo : 값을 캐싱
+3. useCallback : 함수를 캐싱
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 기타 설명
 
-### `yarn test`
+- 함수형 컴포넌트는 그냥 함수이다.
+- 컴포넌트가 렌더링 된다는 것은 누군가가 그 함수를 호출해서 실행되는 것을 말함. 함수가 실행될 때마다 내부에 선언되어 있던 표현식도 매번 다시 선언되어 사용된다.
+- 컴포넌트는 자신의 state가 변경되거나, 부모에게서 받는 props가 변경되었을 때마다 리렌더링이 된다.
+- 하위 컴포넌트에 React.memo와 같이 최적화 설정을 해주지 않는다면 props가 변경이 되지 않더라도 리렌더링이 되는 것이 기본이다.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## React Hooks - 최적화
 
-### `yarn build`
+### - useCallback
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+React.memo는 컴포넌트를 메모이제이션 했다면, useCallback은 인자로 들어오는 함수 자체를 기억한다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+새로 렌더링될 때마다 주소 값을 바꾸기 때문에 이전에 있던 함수와 재렌더링이 되었을 때의 함수랑 다른 것이라고
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+이해하면 될 것 같다. 그 주소값을 메모리제이션을 해주는 것이 useCallback인 것 같다.
 
-### `yarn eject`
+재렌더링될 때마다 함수가 재실행이 되는 것이 아닌, 주소값을 기억해둠으로써 함수가 필요할 때를 제외하고는
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+재렌더링이 되지 않게 하기 위해 사용하는 Hook이라고 이해했다. 그리고 뒤에 deps에서는 해당 함수가 언제 다시
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+다른 형태로 기억되게 될 것인지 의존성을 부여하는 것 같다. 예시를 조금 작성해보자면
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### - React.memo
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```tsx
+function App() {
+  console.log("렌더링이 되었다.");
+  const [first, setfirst] = useState(0);
+  return (
+    <div className="App">
+      <h1>카운트 예제</h1>
+      <p>현재 카운트 : {first}</p>
+      <button onClick={() => setfirst((prev) => prev + 1)}>+</button>
+      <button onClick={() => setfirst((prev) => prev - 1)}>-</button>
+      <Box1 />
+      <Box2 />
+      <Box3 />
+    </div>
+  );
+}
 
-## Learn More
+export default App;
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Box1, Box2, Box3은 부모 컴포넌트로부터 Props를 받은 것도 아닌데, first가 변경이 되었다는 이유로
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+의미없는 재렌더링이 된다. 이 부분을 방지하여준다. 그리고 원하는 props의 변화에 재렌더링이 일어난다.
+
+```tsx
+export default React.memo(Box1);
+```
+
+### - useMemo
+
+## LifeCycle
