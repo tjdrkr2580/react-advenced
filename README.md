@@ -280,7 +280,7 @@ useSelector는 redux의 hook이다. State 값을 가져올 수 있는 것 같다
 
 ## 플러스, 마이너스 버튼을 만들어보자
 
-```
+```tsx
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./redux/config/store";
@@ -317,7 +317,32 @@ function App() {
 
 export default App;
 
+//counter.ts
+const counter = (state = initialState, action: Action) => {
+  switch (action.type) {
+    case "ADD_ONE":
+      return {
+        number: state.number + 1,
+      };
+    case "MINUS_ONE":
+      return {
+        number: state.number - 1,
+      };
+    default:
+      return state;
+  }
+};
+
 ```
 
+reducer에 만들어놓은 action.type을 통해 state를 어떻게 할 것인지
+
+정할 수 있는 것 같다.
 
 
+
+근데 여기서 휴먼 에러가 발생할 수 있기 때문에 이를 방지하기 위해서
+
+액션의 타입을 상수로 export 해주거나, 액션 생성 함수를 통해서
+
+만들어준다면 더욱 베스트인 것 같다.

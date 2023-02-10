@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./redux/config/store";
+import { minusOne, plusOne } from "./redux/modules/counter";
 
 function App() {
   const dispatch = useDispatch();
@@ -10,24 +11,8 @@ function App() {
   return (
     <div className="App">
       <h1>Now count : {counter.number}</h1>
-      <button
-        onClick={() =>
-          dispatch({
-            type: "ADD_ONE",
-          })
-        }
-      >
-        +
-      </button>
-      <button
-        onClick={() =>
-          dispatch({
-            type: "MINUS_ONE",
-          })
-        }
-      >
-        -
-      </button>
+      <button onClick={() => dispatch(plusOne())}>+</button>
+      <button onClick={() => dispatch(minusOne())}>-</button>
     </div>
   );
 }
