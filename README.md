@@ -36,7 +36,49 @@ React.memo는 컴포넌트를 메모이제이션 했다면, useCallback은 인�
 
 재렌더링이 되지 않게 하기 위해 사용하는 Hook이라고 이해했다. 그리고 뒤에 deps에서는 해당 함수가 언제 다시
 
-다른 형태로 기억되게 될 것인지 의존성을 부여하는 것 같다. 예시를 조금 작성해보자면
+다른 형태로 기억되게 될 것인지 의존성을 부여하는 것 같다.
+
+
+
+실제 프로젝트에서 사용을 해보면서 익혀보도록 하자.
+
+```tsx
+import React, { useCallback, useEffect, useState } from "react";
+import Box1 from "./components/Box1";
+import Box2 from "./components/Box2";
+import Box3 from "./components/Box3";
+import BtnReset from "./components/BtnReset";
+
+function App() {
+  const [value, setValue] = useState("");
+
+  const someFunc = useCallback(() => {
+    console.log(`someFuc : number : ${value}`);
+  }, [value]);
+
+  // const someFunc = () => {
+  //   console.log(`someFuc : number : ${value}`);
+  // };
+
+  useEffect(() => {
+    console.log("변경 감지");
+  }, [someFunc]);
+
+  return (
+    <div className="App">
+      <input type="number" onChange={(e) => setValue(e.target.value)} />
+      <button onClick={someFunc}>ddd</button>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+
+
+
 
 ### - React.memo
 
