@@ -200,3 +200,81 @@ function reducer(state = initialState, action) { // default, 액션 객체
 Action Creator가 Action 객체를 생성하고 디스패치가 호출되면 스토어가 리듀서 함수를 실행시켜 새로운 상태를 만든다.
 
 # Sparta Redux
+
+
+
+```tsx
+//중앙 데이터 관리소(store)로
+
+import { createStore } from "redux";
+import { combineReducers } from "redux"; //reducer들을 한방에 묶는 역할
+import counter from "../modules/counter";
+import users from "../modules/user";
+
+const rootReducer = combineReducers({
+  counter,
+  users,
+}); //combineReducer를 통해서 묶은 reducer들을 rootReducer의 저장
+const store = createStore(rootReducer); //그 묶은 reducer를 store로 생성
+
+export default store;
+
+```
+
+Store에서 나눠져있는 store를 combine을 통해서 가져온다.
+
+그리고 그 합친 rootReducer를 store로 선언하고, export 시킨다.
+
+```tsx
+//초기 상태값
+
+import { Action } from "redux";
+
+const initialState = {
+  number: 0,
+};
+
+//리듀서 : 'state에 변화를 일으키는 '함수'
+//(1) state를 액션의 타입에 따라 변경하는 함수
+//input : state, action
+
+const counter = (state = initialState, action: Action) => {
+  switch (action.type) {
+    default:
+      return state;
+  }
+};
+
+export default counter;
+
+```
+
+initialState는 state의 default 값이다.
+
+reducer 안에는 state와 action이 들어가며,
+
+액션 타입에 따라서 어떠한 코드를 실행해준다.
+
+
+
+```tsx
+import React from "react";
+import { useSelector } from "react-redux";
+
+function App() {
+  const data = useSelector((state) => {
+    return state;
+  });
+  console.log(data);
+
+  return <div className="App"></div>;
+}
+
+export default App;
+
+```
+
+useSelector는 redux의 hook이다. State 값을 가져올 수 있는 것 같다.
+
+
+
