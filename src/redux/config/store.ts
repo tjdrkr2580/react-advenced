@@ -12,3 +12,5 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer); //그 묶은 reducer를 store로 생성
 
 export default store;
+
+export type RootState = ReturnType<typeof rootReducer>;
