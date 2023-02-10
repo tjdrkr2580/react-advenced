@@ -400,3 +400,133 @@ export default counter;
 
 개수가 많아져도 관리가 잘 될 것이다.
 
+
+
+## Payload
+
+`Payload` 에는 어떤 타입의 값이든 가질 수 있고, 이는 액션이 가지는
+
+`Payload`  를 의미하고, 타입 또는 스테이터스를 제외한 액션의 정보는
+
+모두 `Payload` 에 있어야 한다고 한다.
+
+
+
+```tsx
+//초기 상태값
+
+import { Action, AnyAction } from "redux";
+
+const initialState = {
+  number: 0,
+};
+
+const ADD_ONE = "ADD_ONE";
+const MINUS_ONE = "MINUS_ONE";
+const Plus_N = "PLUS_N";
+const Minus_N = "MINUS_N";
+
+export const plusOne = () => {
+  return {
+    type: ADD_ONE,
+  };
+};
+
+export const minusOne = () => {
+  return {
+    type: MINUS_ONE,
+  };
+};
+
+export const plusN = (payload: any) => {
+  return {
+    type: Plus_N,
+    payload,
+  };
+};
+
+export const minusN = (payload: any) => {
+  return {
+    type: Minus_N,
+    payload,
+  };
+};
+
+//리듀서 : 'state에 변화를 일으키는 '함수'
+//(1) state를 액션의 타입에 따라 변경하는 함수
+//input : state, action
+//action 객체라는 것은 action type을 payload 만큼 처리하는 것이다.
+
+const counter = (state = initialState, action: AnyAction) => {
+  switch (action.type) {
+    case ADD_ONE:
+      return {
+        number: state.number + 1,
+      };
+    case MINUS_ONE:
+      return {
+        number: state.number - 1,
+      };
+    case Plus_N:
+      return {
+        number: state.number + action.payload,
+      };
+    case Minus_N:
+      return {
+        number: state.number - action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+export default counter;
+
+```
+
+그에 따라 변경한 코드 1.
+
+
+
+```tsx
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "./redux/config/store";
+import { minusN, minusOne, plusN, plusOne } from "./redux/modules/counter";
+
+function App() {
+  const [number, setNumber] = useState(0);
+  const dispatch = useDispatch();
+  const counter = useSelector((state: RootState) => {
+    return state.counter;
+  });
+  useEffect(() => {
+    console.log(number);
+  }, [number]);
+
+  const onChangeNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setNumber(+value);
+  };
+  return (
+    <div className="App">
+      <h1>Now count : {counter.number}</h1>
+      <input type="number" value={number} onChange={onChangeNumber} />
+      <button onClick={() => dispatch(plusN(number))}>+</button>
+      <button onClick={() => dispatch(minusN(number))}>-</button>
+    </div>
+  );
+}
+
+export default App;
+
+```
+
+그에 따라 변경한 코드 2
+
+
+
+
+
+
+
